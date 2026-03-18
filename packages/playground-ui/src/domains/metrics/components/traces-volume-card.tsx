@@ -1,5 +1,5 @@
 import { MetricsCardComposite } from '@/ds/components/MetricsDashboardCard/dashboard-card-composite';
-import { HorizontalBars } from './horizontal-bars';
+import { HorizontalBars } from '@/ds/components/HorizontalBars';
 import { CHART_COLORS, formatCompact } from './metrics-utils';
 import { Tabs, TabList, Tab, TabContent } from '@/ds/components/Tabs';
 import { useTraceVolumeMetrics } from '../hooks/use-trace-volume-metrics';
@@ -10,11 +10,12 @@ function VolumeBars({ data }: { data: VolumeRow[] }) {
     <HorizontalBars
       data={data.map(d => ({ name: d.name, values: [d.completed, d.errors] }))}
       segments={[
-        { label: 'Completed', color: CHART_COLORS.blue },
-        { label: 'Errors', color: CHART_COLORS.red },
+        { label: 'Completed', color: CHART_COLORS.greenDark },
+        { label: 'Errors', color: CHART_COLORS.redDark },
       ]}
       maxVal={Math.max(...data.map(d => d.completed + d.errors))}
       fmt={formatCompact}
+      variant="shape"
     />
   );
 }
@@ -35,11 +36,11 @@ export function TracesVolumeCard() {
       {!data || (data.agentData.length === 0 && data.workflowData.length === 0 && data.toolData.length === 0) ? (
         <p className="text-muted text-xs py-4">No trace volume data available</p>
       ) : (
-        <Tabs defaultTab="agents" className="overflow-visible">
+        <Tabs defaultTab="agents" className="grid grid-rows-[auto_1fr] overflow-y-auto h-full">
           <TabList>
-            <Tab value="agents">Agents</Tab>
-            <Tab value="workflows">Workflows</Tab>
-            <Tab value="tools">Tools</Tab>
+            <Tab value="agents" size="smaller">Agents</Tab>
+            <Tab value="workflows" size="smaller">Workflows</Tab>
+            <Tab value="tools" size="smaller">Tools</Tab>
           </TabList>
           <TabContent value="agents">
             {data.agentData.length > 0 ? (

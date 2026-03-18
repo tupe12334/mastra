@@ -1,5 +1,5 @@
 import { MetricsCardComposite } from '@/ds/components/MetricsDashboardCard/dashboard-card-composite';
-import { HorizontalBars } from './horizontal-bars';
+import { HorizontalBars } from '@/ds/components/HorizontalBars';
 import { CHART_COLORS, formatCompact } from './metrics-utils';
 import { Tabs, TabList, Tab, TabContent } from '@/ds/components/Tabs';
 import { useTokenUsageByAgentMetrics } from '../hooks/use-token-usage-by-agent-metrics';
@@ -38,7 +38,7 @@ export function TokenUsageByAgentCard() {
               ]}
               maxVal={Math.max(...data.map(d => d.input + d.output))}
               fmt={formatCompact}
-              // className="border border-red-500"
+              variant="shape"
             />
           </TabContent>
           <TabContent value="cost">

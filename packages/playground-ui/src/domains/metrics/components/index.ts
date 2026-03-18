@@ -18,7 +18,7 @@ export { useModelUsageCostMetrics } from '../hooks/use-model-usage-cost-metrics'
 export type { ModelUsageRow } from '../hooks/use-model-usage-cost-metrics';
 export { BarListContent, StackedRunsBars } from './bar-list';
 export { FlexSeparatedGrid } from './flex-separated-grid';
-export { HorizontalBars } from './horizontal-bars';
+export { HorizontalBars } from '@/ds/components/HorizontalBars';
 export { DashboardLineChart } from './dashboard-line-chart';
 export { TracesVolumeCard } from './traces-volume-card';
 export { useTraceVolumeMetrics } from '../hooks/use-trace-volume-metrics';

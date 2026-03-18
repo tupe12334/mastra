@@ -32,9 +32,11 @@ export const CHART_COLORS = {
   pink: '#f472b6',
   purple: '#8b5cf6',
   blue: '#4f83f1',
-  blueDark: '#2b5cd9',
-  blueLight: '#93b4f8',
+  blueDark: '#1a3478',
+  blueLight: '#2a4a9a',
   red: '#f87171',
+  greenDark: '#15613a',
+  redDark: '#991b1b',
   yellow: '#facc15',
 } as const;
 

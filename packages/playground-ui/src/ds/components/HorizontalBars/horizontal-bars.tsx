@@ -9,12 +9,14 @@ export function HorizontalBars({
   segments,
   maxVal,
   fmt,
+  variant = 'line',
   className,
 }: {
   data: Array<{ name: string; values: number[] }>;
   segments: Segment[];
   maxVal: number;
   fmt: (v: number) => string;
+  variant?: 'line' | 'shape';
   className?: string;
 }) {
   const sorted = [...data].sort((a, b) => {
@@ -36,12 +38,82 @@ export function HorizontalBars({
             </div>
           ))}
         </div>
-        {isStacked && <span className="shrink-0 text-ui-xs text-neutral2 uppercase">Total</span>}
+        {(isStacked || variant === 'shape') && (
+          <span className="shrink-0 text-ui-xs text-neutral2 uppercase pr-2">Total</span>
+        )}
       </div>
-      <div className="grid gap-2">
+      <div className={cn('grid', variant === 'line' ? 'gap-2' : 'gap-3')}>
         {sorted.map((d, i) => {
           const total = d.values.reduce((s, v) => s + v, 0);
           const opacity = Math.max(0.3, 1 - i * 0.1);
+
+          if (variant === 'shape') {
+            return (
+              <div key={d.name} className="flex items-center gap-14 h-6">
+                {/* Bar area */}
+                <div className="relative h-full flex-1 min-w-0">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div
+                        className="absolute inset-y-0 left-0 cursor-default"
+                        style={{ width: `${maxVal > 0 ? (total / maxVal) * 100 : 0}%` }}
+                      >
+                        {segments.map((seg, si) => {
+                          const val = d.values[si] ?? 0;
+                          const pct = total > 0 ? (val / total) * 100 : 0;
+                          const left = d.values
+                            .slice(0, si)
+                            .reduce((s, v) => s + (total > 0 ? (v / total) * 100 : 0), 0);
+
+                          if (isStacked) {
+                            return (
+                              <div
+                                key={seg.label}
+                                className={cn(
+                                  'absolute inset-y-0',
+                                  si === 0 && 'rounded-l',
+                                  si === segments.length - 1 && 'rounded-r',
+                                )}
+                                style={{
+                                  left: `${left}%`,
+                                  width: `${pct}%`,
+                                  backgroundColor: seg.color,
+                                }}
+                              />
+                            );
+                          }
+
+                          return (
+                            <div
+                              key={seg.label}
+                              className="absolute inset-y-0 left-0 rounded"
+                              style={{ width: `${pct}%`, backgroundColor: seg.color }}
+                            />
+                          );
+                        })}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="font-mono">
+                      <div className="grid gap-1">
+                        {segments.map((seg, si) => (
+                          <div key={seg.label} className="flex items-center gap-2">
+                            <span>{seg.label}</span>
+                            <span className="ml-auto pl-3">{fmt(d.values[si] ?? 0)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                  {/* Label rendered inside the bar */}
+                  <span className="absolute inset-y-0 left-2.5 flex items-center text-ui-sm text-neutral4 truncate z-10 pointer-events-none">
+                    {d.name}
+                  </span>
+                </div>
+                {/* Value outside the bar */}
+                <span className="text-ui-md text-neutral4 tabular-nums shrink-0 pr-3">{fmt(total)}</span>
+              </div>
+            );
+          }
 
           return (
             <div key={d.name}>
